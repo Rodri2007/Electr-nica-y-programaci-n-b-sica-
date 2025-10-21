@@ -1,0 +1,27 @@
+// --- Declaración de variables ---
+int pinBoton = 2;             // Pin digital donde está conectado el botón
+int pinPotenciometro = A0;    // Pin analógico donde está conectado el potenciómetro
+
+int valorBoton;               // Variable para guardar el estado del botón (1 = sin presionar, 0 = presionado)
+int valorPotenciometro;       // Variable para guardar la lectura analógica del potenciómetro (0 a 1023)
+
+void setup() {
+  // --- Se ejecuta una sola vez al iniciar el programa ---
+
+  Serial.begin(9600);             // Inicializa la comunicación serial a 9600 baudios (para enviar datos al monitor serial)
+  
+  pinMode(pinBoton, INPUT_PULLUP);     // Configura el pin del botón como entrada con resistencia interna pull-up activada
+  pinMode(pinPotenciometro, INPUT);    // Configura el pin del potenciómetro como entrada analógica
+}
+
+void loop() {
+  // --- Se repite constantemente mientras el Arduino esté encendido ---
+
+  valorBoton = digitalRead(pinBoton);         // Lee el estado del botón (HIGH si no se presiona, LOW si se presiona)
+  valorPotenciometro = analogRead(pinPotenciometro); // Lee el valor analógico del potenciómetro (de 0 a 1023)
+
+  Serial.println(valorBoton);          // Imprime el estado del botón en el Monitor Serial
+  Serial.println(valorPotenciometro);  // Imprime el valor del potenciómetro en el Monitor Serial
+
+  delay(400);  // Espera 400 milisegundos antes de hacer otra lectura
+}
