@@ -1,0 +1,81 @@
+// --- Declaración de pines ---
+int ledPin = 3;             // Pin donde está conectado el LED
+int botonPin = 2;           // Pin donde está conectado el botón (usa resistencia interna pull-up)
+int potPin = A0;            // Pin donde está conectado el potenciómetro
+
+// --- Variables de control ---
+int retardo = 50;           // Tiempo de espera entre lecturas (en milisegundos)
+int estadoBoton;            // Variable para almacenar el estado del botón
+int valorPot;               // Variable para almacenar el valor del potenciómetro
+int brilloLED = 0;          // Nivel de brillo actual del LED (0 a 255)
+
+// --- Configuración inicial ---
+void setup() {
+  Serial.begin(9600);               // Inicia la comunicación serial a 9600 baudios
+  pinMode(ledPin, OUTPUT);          // Configura el pin del LED como salida
+  pinMode(botonPin, INPUT_PULLUP);  // Configura el pin del botón como entrada con resistencia pull-up interna
+  pinMode(potPin, INPUT);           // Configura el pin del potenciómetro como entrada
+
+  // El LED no se enciende al inicio, pero podrías hacerlo aquí si deseas indicar "inicio"
+  // digitalWrite(ledPin, HIGH);
+}
+
+// --- Bucle principal ---
+void loop() {
+
+  // =====================================================
+  // 🔹 OPCIÓN 1: Controlar LED con botón (modo incremento)
+  // =====================================================
+
+  // Si el botón se presiona (LOW porque tiene pull-up)
+  if (digitalRead(botonPin) == LOW) {
+    brilloLED += 1;          // Aumenta el brillo del LED en 1 unidad
+  }
+
+  // Si el brillo supera el máximo permitido, reinicia a 0
+  if (brilloLED > 255) {
+    brilloLED = 0;
+  }
+
+  // Aplica el brillo al LED
+  analogWrite(ledPin, brilloLED);
+
+  // Muestra el valor actual del brillo por el monitor serial
+  Serial.print("Brillo actual: ");
+  Serial.println(brilloLED);
+
+  // Pequeña pausa para evitar múltiples lecturas al mantener el botón presionado
+  delay(retardo);
+
+
+
+  // =====================================================
+  // 🔹 OPCIÓN 2: Controlar LED con potenciómetro (modo analógico)
+  // =====================================================
+  // 👉 Descomenta las líneas siguientes si quieres usar el potenciómetro:
+
+  /*
+  valorPot = analogRead(potPin);    // Lee el valor del potenciómetro (0 a 1023)
+  valorPot = valorPot / 4;          // Escala el valor a rango PWM (0 a 255)
+  
+  analogWrite(ledPin, valorPot);    // Aplica el valor al LED
+  
+  Serial.print("Valor potenciómetro: ");
+  Serial.println(valorPot);         // Muestra el valor en el monitor serial
+  */
+
+
+
+  // =====================================================
+  // 🔹 OPCIÓN 3: Encender/apagar LED directamente con botón
+  // =====================================================
+  // 👉 Descomenta las siguientes líneas si quieres usar el botón como interruptor ON/OFF:
+
+  /*
+  estadoBoton = digitalRead(botonPin);  // Lee el estado del botón
+  digitalWrite(ledPin, !estadoBoton);   // Enciende el LED cuando el botón se presiona
+  Serial.print("Estado del botón: ");
+  Serial.println(estadoBoton);
+  */
+
+}
